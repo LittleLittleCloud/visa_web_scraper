@@ -1,5 +1,5 @@
 import os
-
+import smtplib
 import requests
 from dotenv import load_dotenv
 
@@ -18,7 +18,6 @@ def send_photo(photo_file):
     url = f'https://api.telegram.org/bot{TOKEN}/sendPhoto'
     parameters = {'chat_id': CHAT_ID}
     return requests.post(url, parameters, files={'photo': photo_file})
-
 
 if __name__ == "__main__":
     # Testing
