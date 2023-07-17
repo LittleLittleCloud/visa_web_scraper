@@ -105,14 +105,19 @@ def has_website_changed(driver, user, pwd, url, no_appointment_text):
     #     f.write(driver.page_source)
 
     # Getting main text
-    main_page = driver.find_element(By.ID, 'main')
+    try:
+        main_page = driver.find_element(By.ID, 'main')
 
-    # For debugging false positives.
-    with open('debugging/main_page', 'w') as f:
-        f.write(main_page.text)
+        # For debugging false positives.
+        with open('debugging/main_page', 'w') as f:
+            f.write(main_page.text)
+        # If the "no appointment" text is not found return True. A change was found.
+        return no_appointment_text not in main_page.text, main_page.text
+    except:
+        print('No main page found.')
+        return False, ''
 
-    # If the "no appointment" text is not found return True. A change was found.
-    return no_appointment_text not in main_page.text, main_page.text
+    
 
 def retrieve_earliest_date(content: str, city: str):
     # example
@@ -201,9 +206,7 @@ def run_visa_scraper(no_appointment_text):
             # print(f'No change was found. Checking again in {seconds_between_checks} seconds.')
             # time.sleep(seconds_between_checks)
             send_message('you are blocked')
-            break
-
-
+            continue
 def main():
     text = 'There are no available appointments at this time.'
 
